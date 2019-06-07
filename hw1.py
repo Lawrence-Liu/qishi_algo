@@ -46,3 +46,32 @@ class Solution:
         else:
             temp = self.findStrobogrammatic(n-2)
             return [ j + x + table[j] for x in temp +  (list(set(['0' + x[1:-1] +'0' for  x in temp])) if n>3 else [])  for j in table]
+
+
+
+#leetcode 698
+class Solution:
+     def canPartitionKSubsets(self, nums, k):
+        target, rem = divmod(sum(nums), k)
+        if rem: return False
+
+        def search(groups):
+            if not nums: return True
+            v = nums.pop()
+            for i, group in enumerate(groups):
+                if group + v <= target:
+                    groups[i] += v
+                    if search(groups): return True
+                    groups[i] -= v
+                if not group: break
+            nums.append(v)
+            return False
+
+        nums.sort()
+        if nums[-1] > target: 
+            return False
+        while nums and nums[-1] == target:
+            nums.pop()
+            k -= 1
+
+        return search([0] * k)
